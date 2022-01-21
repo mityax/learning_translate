@@ -164,7 +164,7 @@ public class SwiftLearningTranslatePlugin: NSObject, FlutterPlugin {
     result(true)
   }
 
-  func deleteModel(call: FlutterMethodCall, result: FlutterResult) {
+  func deleteModel(call: FlutterMethodCall, result: @escaping FlutterResult) {
     guard let args = call.arguments as? Dictionary<String, AnyObject> else {
       result(FlutterError(
         code: "NOARGUMENTS", 
