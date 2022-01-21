@@ -51,7 +51,7 @@ public class SwiftLearningTranslatePlugin: NSObject, FlutterPlugin {
 
     let options = TranslatorOptions(
       sourceLanguage: TranslateLanguage(rawValue: source!), 
-      targetLanguage: TranslateLanguage(rawValue: target!),
+      targetLanguage: TranslateLanguage(rawValue: target!)
     )
     let translator = Translator.translator(options: options)
 
