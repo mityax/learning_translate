@@ -9,14 +9,14 @@ public class SwiftLearningTranslatePlugin: NSObject, FlutterPlugin {
     let channel = FlutterMethodChannel(name: "LearningTranslate", binaryMessenger: registrar.messenger())
     let instance = SwiftLearningTranslatePlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
-    instance.setModelManager(registrar)
+    instance.setModelManager(registrar: registrar)
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     if call.method == "translate" {
-      translate(call, result)
+      translate(call, result: result)
     } else if call.method == "dispose" {
-      dispose(result)
+      dispose(result: result)
     } else {
       result(FlutterMethodNotImplemented)
     }
@@ -36,10 +36,10 @@ public class SwiftLearningTranslatePlugin: NSObject, FlutterPlugin {
       return
     }
     
-    let source: String? = args["from"]
-    let target: String? = args["to"]
-    let text: String? = args["text"]
-    let isDownloadRequireWifi: Bool = args["isDownloadRequireWifi"] ?? true
+    let source: String? = args["from"] as? String
+    let target: String? = args["to"] as? String
+    let text: String? = args["text"] as? String
+    let isDownloadRequireWifi: Bool = args["isDownloadRequireWifi"] as? Bool ?? true
     
     if source == nil || target == nil || text == nil {
       result(FlutterError(
@@ -49,7 +49,10 @@ public class SwiftLearningTranslatePlugin: NSObject, FlutterPlugin {
       return
     }
 
-    let options = TranslatorOptions(sourceLanguage: source!, targetLanguage: target!)
+    let options = TranslatorOptions(
+      sourceLanguage: TranslateLanguage(rawValue: source!), 
+      targetLanguage: TranslateLanguage(rawValue: target!),
+    )
     let translator = Translator.translator(options: options)
 
     let conditions = ModelDownloadConditions(
@@ -87,7 +90,7 @@ public class SwiftLearningTranslatePlugin: NSObject, FlutterPlugin {
     modelManagerChannel.setMethodCallHandler({
       (call: FlutterMethodCall, result: FlutterResult) -> Void in
         if call.method == "list" {
-          self.listModel(result)
+          self.listModel(result: result)
         } else if call.method == "download" {
           self.downloadModel(call: call, result: result)
         } else if call.method == "check" {
@@ -95,7 +98,7 @@ public class SwiftLearningTranslatePlugin: NSObject, FlutterPlugin {
         } else if call.method == "delete" {
           self.deleteModel(call: call, result: result)
         } else {
-          self.result(FlutterMethodNotImplemented)
+          result(FlutterMethodNotImplemented)
         }
     })
   }
@@ -115,7 +118,7 @@ public class SwiftLearningTranslatePlugin: NSObject, FlutterPlugin {
       return
     }
 
-    let language: String? = args["model"]
+    let language: String? = args["model"] as? String
 
     if language == nil {
       result(FlutterError(
@@ -139,8 +142,8 @@ public class SwiftLearningTranslatePlugin: NSObject, FlutterPlugin {
       return
     }
 
-    let language: String? = args["model"]
-    let isDownloadRequireWifi: Bool = args["isDownloadRequireWifi"] ?? true
+    let language: String? = args["model"] as? String
+    let isDownloadRequireWifi: Bool = args["isDownloadRequireWifi"] as? Bool ?? true
 
     if language == nil {
       result(FlutterError(
@@ -170,7 +173,7 @@ public class SwiftLearningTranslatePlugin: NSObject, FlutterPlugin {
       return
     }
 
-    let language: String? = args["model"]
+    let language: String? = args["model"] as? String
     
     if language == nil {
       result(FlutterError(
