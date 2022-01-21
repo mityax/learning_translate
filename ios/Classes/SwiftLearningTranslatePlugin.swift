@@ -88,7 +88,7 @@ public class SwiftLearningTranslatePlugin: NSObject, FlutterPlugin {
       name: "LearningTranslationModelManager", binaryMessenger: registrar.messenger())
 
     modelManagerChannel.setMethodCallHandler({
-      (call: FlutterMethodCall, result: FlutterResult) -> Void in
+      (call: FlutterMethodCall, result: @escaping FlutterResult) -> Void in
         if call.method == "list" {
           self.listModel(result: result)
         } else if call.method == "download" {
